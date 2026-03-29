@@ -8,10 +8,12 @@ Sistema em C para leitura, concatenação e análise de dados jurisdicionais da 
 
 ```
 /
-├── base_de_dados/   # Pasta com todos os arquivos CSV de entrada
-├── list.h           # Declarações do TAD Lista e da struct de dados
-├── list.c           # Implementação do TAD Lista
-├── main.c           # Menu principal e chamada das funcionalidades
+├── base_de_dados/
+├── list.h
+├── list.c
+├── main.c
+├── documentacao.pdf
+├── .gitignore
 └── README.md
 ```
 

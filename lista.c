@@ -35,17 +35,17 @@ void lerArquivoCSV(char *nomearq, Lista *L) {
     fgets(cabecalho, 500, f); 
     Tribunal T;
    
-    while (fscanf(f, " \"%[^\"]\",", T.sigla_tribunal) == 1) {
+    while (fscanf(f, " %[^,],", T.sigla_tribunal) == 1) {
         
-        fscanf(f, " \"%[^\"]\",", T.procedimento);
-        fscanf(f, " \"%[^\"]\",", T.ramo_justica);
-        fscanf(f, " \"%[^\"]\",", T.sigla_grau);
-        fscanf(f, " \"%[^\"]\",", T.uf_oj);
-        fscanf(f, " \"%[^\"]\",", T.municipio_oj);
+        fscanf(f, " %[^,],", T.procedimento);
+        fscanf(f, " %[^,],", T.ramo_justica);
+        fscanf(f, " %[^,],", T.sigla_grau);
+        fscanf(f, " %[^,],", T.uf_oj);
+        fscanf(f, " %[^,],", T.municipio_oj);
         fscanf(f, " %d,", &T.id_ultimo_oj);
-        fscanf(f, " \"%[^\"]\",", T.nome);
-        fscanf(f, " \"%[^\"]\",", T.mesano_cnm1);
-        fscanf(f, " \"%[^\"]\",", T.mesano_sent);
+        fscanf(f, " %[^,],", T.nome);
+        fscanf(f, " %[^,],", T.mesano_cnm1);
+        fscanf(f, " %[^,],", T.mesano_sent);
         fscanf(f, " %d,", &T.casos_novos_2026);
         fscanf(f, " %d,", &T.julgados_2026);
         fscanf(f, " %d,", &T.prim_sent2026);
@@ -82,4 +82,54 @@ void lerArquivoCSV(char *nomearq, Lista *L) {
     }
     
     fclose(f); 
+}
+float calcularMeta1(Lista *L) {
+
+    int Julgados = 0;
+    int Casosn = 0;
+    int Suspensos = 0;
+    int Dessobrestados = 0;
+
+    No *aux = L->inicio;
+    while (aux != NULL) {
+        
+        Julgados = aux->dados.julgados_2026 +Julgados;
+        Casosn = aux->dados.casos_novos_2026 + Casosn ;
+        Suspensos = aux->dados.suspensos_2026 + Suspensos;
+        Dessobrestados =aux->dados.dessobrestados_2026 + Dessobrestados ;
+
+        aux = aux->prox;
+    }
+    
+    int result = Casosn + Dessobrestados - Suspensos;
+    if (result <= 0) {
+        return 0.0;
+    }
+
+    float resultadoFinal = ((float)Julgados / result) * 100;
+    return resultadoFinal;
+}
+float calcularMeta2A(Lista *L){
+
+    int Julgm2= 0;
+    int Distm2= 0;
+    int Suspm2 = 0;
+
+    No* aux = L ->inicio;
+    while(aux != NULL){
+        Julgm2= aux ->dados.julgm2_a + Julgm2;
+        Distm2 = aux ->dados.distm2_a + Distm2;
+        Suspm2 = aux ->dados.suspm2_a + Suspm2;
+
+        aux = aux->prox;
+    }
+
+    int result = Distm2 - Suspm2;
+    if (result <= 0) {
+        return 0.0;
+    }
+
+    float resultadoFinal = ((float)Julgm2 / result) * (1000.0/7.0);
+    return resultadoFinal;
+
 }

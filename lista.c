@@ -9,20 +9,20 @@ Lista *criarLista()
     Lista *l = (Lista *)malloc(sizeof(Lista));
     if (l == NULL)
         return NULL;
-    l->data = malloc(sizeof(Dados) * 100); // capacidade inicial
+    l->data = malloc(sizeof(Tribunal) * 100); // capacidade inicial
     l->tamanho = 0;
     l->capacidade = 100;
     return l;
 }
 
-void inserir_no_fim(Lista *lista, Dados dados)
+void inserir_no_fim(Lista *lista, Tribunal tribunal)
 {
     if (lista->tamanho == lista->capacidade)
     {
         lista->capacidade *= 2;
-        lista->data = realloc(lista->data, sizeof(Dados) * lista->capacidade);
+        lista->data = realloc(lista->data, sizeof(Tribunal) * lista->capacidade);
     }
-    lista->data[lista->tamanho] = dados;
+    lista->data[lista->tamanho] = tribunal;
     lista->tamanho++;
 }
 

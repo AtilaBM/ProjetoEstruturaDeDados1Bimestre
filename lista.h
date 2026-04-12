@@ -1,11 +1,11 @@
 #ifndef LISTA_H
 #define LISTA_H
 
-typedef struct
-{
+typedef struct {
 
     char sigla_tribunal[10];
-
+    char municipio_oj[100];
+    
     // Variáveis da Meta 1
     int casos_novos_2026;
     int julgados_2026;
@@ -29,17 +29,18 @@ typedef struct
     int distm4_b;
     int suspm4_b;
 
-} Tribunal;
+}Tribunal;
 
-typedef struct
-{
-    Tribunal *data;
-    int tamanho;
-    int capacidade;
-} Lista;
+typedef struct No{
+    Tribunal dados;
+    struct No* prox;
+}No;
 
-Lista *criarLista();
-void inserirNoFim(Lista *lista, Tribunal tribunal);
+typedef struct {
+     No *inicio;
+}Lista;
+
+
 
 //  FUNÇÕES PRINCIPAIS
 void concatenarArquivos();

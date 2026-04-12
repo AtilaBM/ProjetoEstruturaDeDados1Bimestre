@@ -3,6 +3,7 @@
 #include <string.h>
 #include <dirent.h>
 #include <ctype.h>
+
 #include "lista.h"
 
 void concatenarArquivos()
@@ -43,7 +44,7 @@ void concatenarArquivos()
             }
         }
     }
-    printf("\nTem %d linhas nesse arquivo\n",count);
+    printf("\nTem %d linhas nesse arquivo\n", count);
 
     fclose(i);
     closedir(dir);
@@ -55,8 +56,10 @@ void pesquisaPorMunicipio()
     char nomeArquivo[250];
     char *token;
 
+    getchar();
     printf("\nDigite o nome do municipio em maisculo e com acentos se necessario: ");
-    scanf("%s", municipio);
+    fgets(municipio, sizeof(municipio), stdin);
+    municipio[strcspn(municipio, "\n")] = '\0';
 
     // for (int j = 0; municipio[j]; j++)
     // {

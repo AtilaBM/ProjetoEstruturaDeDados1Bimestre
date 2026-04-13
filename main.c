@@ -34,5 +34,7 @@ int main()
    default:
       printf("Opcao invalida.\n");
    }
-   return 0;
+
+    return 0;
 }
+  

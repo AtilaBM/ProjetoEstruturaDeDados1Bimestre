@@ -6,6 +6,7 @@
 
 #include "lista.h"
 
+
 void concatenarArquivos()
 {
     DIR *dir = opendir("BasedeDados/");

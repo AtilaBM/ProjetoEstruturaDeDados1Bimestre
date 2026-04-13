@@ -1,4 +1,5 @@
-#include <stdio.h>   
+#include <stdio.h> 
+#include <string.h>  
 #include <stdlib.h>
 #include "lista.h"
 
@@ -31,58 +32,35 @@ void lerArquivoCSV(char *nomearq, Lista *L) {
         return;
     }
 
-    char cabecalho[500];
-    fgets(cabecalho, 500, f); 
-    Tribunal T;
-   
-    while (fscanf(f, " %[^,],", T.sigla_tribunal) == 1) {
+    char linha[4096];
+    fgets(linha, sizeof(linha), f); 
+
+    while (fgets(linha, sizeof(linha), f)) {
+       
+        if (strlen(linha) < 10 || strstr(linha, "sigla") != NULL) {
+            continue;
+        }
+
+        Tribunal T;
         
-        fscanf(f, " %[^,],", T.procedimento);
-        fscanf(f, " %[^,],", T.ramo_justica);
-        fscanf(f, " %[^,],", T.sigla_grau);
-        fscanf(f, " %[^,],", T.uf_oj);
-        fscanf(f, " %[^,],", T.municipio_oj);
-        fscanf(f, " %d,", &T.id_ultimo_oj);
-        fscanf(f, " %[^,],", T.nome);
-        fscanf(f, " %[^,],", T.mesano_cnm1);
-        fscanf(f, " %[^,],", T.mesano_sent);
-        fscanf(f, " %d,", &T.casos_novos_2026);
-        fscanf(f, " %d,", &T.julgados_2026);
-        fscanf(f, " %d,", &T.prim_sent2026);
-        fscanf(f, " %d,", &T.suspensos_2026);
-        fscanf(f, " %d,", &T.dessobrestados_2026);
-        fscanf(f, " %f,", &T.cumprimento_meta1); 
+        int lidos = sscanf(linha, " %[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%d,%[^,],%[^,],%[^,],%d,%d,%d,%d,%d,%f,%d,%d,%d,%f,%d,%d,%d,%d,%f,%d,%d,%d,%f,%d,%d,%d,%f",
+            T.sigla_tribunal, T.procedimento, T.ramo_justica, T.sigla_grau, T.uf_oj, T.municipio_oj,
+            &T.id_ultimo_oj, T.nome, T.mesano_cnm1, T.mesano_sent,
+            &T.casos_novos_2026, &T.julgados_2026, &T.prim_sent2026, &T.suspensos_2026, &T.dessobrestados_2026,
+            &T.cumprimento_meta1,
+            &T.distm2_a, &T.julgm2_a, &T.suspm2_a, &T.cumprimento_meta2a,
+            &T.distm2_ant, &T.julgm2_ant, &T.suspm2_ant, &T.desom2_ant, &T.cumprimento_meta2ant,
+            &T.distm4_a, &T.julgm4_a, &T.suspm4_a, &T.cumprimento_meta4a,
+            &T.distm4_b, &T.julgm4_b, &T.suspm4_b, &T.cumprimento_meta4b);
 
-        // BLOCO META 2A
-        fscanf(f, " %d,", &T.distm2_a);
-        fscanf(f, " %d,", &T.julgm2_a);
-        fscanf(f, " %d,", &T.suspm2_a);
-        fscanf(f, " %f,", &T.cumprimento_meta2a);
-
-        // BLOCO META 2 ANT
-        fscanf(f, " %d,", &T.distm2_ant);
-        fscanf(f, " %d,", &T.julgm2_ant);
-        fscanf(f, " %d,", &T.suspm2_ant);
-        fscanf(f, " %d,", &T.desom2_ant);
-        fscanf(f, " %f,", &T.cumprimento_meta2ant);
-
-        // BLOCO META 4A
-        fscanf(f, " %d,", &T.distm4_a);
-        fscanf(f, " %d,", &T.julgm4_a);
-        fscanf(f, " %d,", &T.suspm4_a);
-        fscanf(f, " %f,", &T.cumprimento_meta4a);
         
-        // BLOCO META 4B
-        fscanf(f, " %d,", &T.distm4_b);
-        fscanf(f, " %d,", &T.julgm4_b);
-        fscanf(f, " %d,", &T.suspm4_b);
-        fscanf(f, " %f\n", &T.cumprimento_meta4b); 
-
-        inserirNoFim(L, T);
+        if (lidos >= 1) {
+            inserirNoFim(L, T);
+        }
     }
-    
-    fclose(f); 
+    fclose(f);
 }
+
 float calcularMeta1(Lista *L) {
 
     int Julgados = 0;

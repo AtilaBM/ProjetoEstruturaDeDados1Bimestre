@@ -4,6 +4,7 @@
 #include <windows.h> 
 #include "lista.h"
 
+////////////////////// TESTE MAIN//////////////////////////
 
 int main() {
     Lista minhaLista;

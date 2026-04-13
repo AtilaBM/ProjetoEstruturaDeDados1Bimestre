@@ -3,12 +3,12 @@
 
 typedef struct {
 
-    char sigla_tribunal[20];
-    char procedimento[100];
+    char sigla_tribunal[50];
+    char procedimento[150];
     char ramo_justica[50];
     char sigla_grau[10];
     char uf_oj[5];
-    char municipio_oj[100];
+    char municipio_oj[150];
 
     // --- IDENTIFICAÇÃO 
     int id_ultimo_oj;

@@ -10,6 +10,9 @@ int main()
 {
    int op;
 
+   Lista *L;
+   L->inicio=NULL;
+
    system("cls");
    system("clear");
 
@@ -26,7 +29,7 @@ int main()
       concatenarArquivos();
       break;
    case 2:
-      printf("Nao disponivel");
+      gerarResumo(L);
       break;
    case 3:
       pesquisaPorMunicipio();
@@ -37,4 +40,3 @@ int main()
 
     return 0;
 }
-  

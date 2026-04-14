@@ -45,5 +45,6 @@ typedef struct {
 //  FUNÇÕES PRINCIPAIS
 void concatenarArquivos();
 void pesquisaPorMunicipio();
+void gerarResumo(Lista *L);
 
 #endif

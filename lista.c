@@ -131,3 +131,118 @@ void pesquisaPorMunicipio()
     fclose(i);
     closedir(dir);
 }
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <dirent.h>
+
+#include "lista.h"
+
+void limparString(char *str) {
+    if (str[0] == '"') {
+        memmove(str, str + 1, strlen(str));
+    }
+
+    int len = strlen(str);
+    while (len > 0 && (str[len - 1] == '"' || str[len - 1] == '\n' || str[len - 1] == '\r')) {
+        str[len - 1] = '\0';
+        len--;
+    }
+}
+
+void carregarDados(Lista *L, char *nomeArquivo) {
+
+    FILE *arq = fopen(nomeArquivo, "r");
+    if (!arq) {
+        printf("Erro ao abrir %s\n", nomeArquivo);
+        return;
+    }
+
+    char linha[4096];
+    fgets(linha, sizeof(linha), arq); // pula cabeçalho
+
+    while (fgets(linha, sizeof(linha), arq)) {
+
+        No *novo = malloc(sizeof(No));
+        if (!novo) break;
+
+        char *token;
+        int coluna = 0;
+
+        token = strtok(linha, ",");
+
+        while (token != NULL) {
+
+            limparString(token);
+
+            switch (coluna) {
+
+                case 0: strcpy(novo->dados.sigla_tribunal, token); break;
+                case 5: strcpy(novo->dados.municipio_oj, token); break;
+
+                case 10: novo->dados.casos_novos_2026 = atoi(token); break;
+                case 11: novo->dados.julgados_2026 = atoi(token); break;
+                case 13: novo->dados.suspensos_2026 = atoi(token); break;
+                case 14: novo->dados.dessobrestados_2026 = atoi(token); break;
+
+                case 16: novo->dados.distm2_a = atoi(token); break;
+                case 17: novo->dados.julgm2_a = atoi(token); break;
+                case 18: novo->dados.suspm2_a = atoi(token); break;
+            }
+
+            token = strtok(NULL, ",");
+            coluna++;
+        }
+
+        novo->prox = L->inicio;
+        L->inicio = novo;
+    }
+
+    fclose(arq);
+}
+
+float calcularMeta1(Lista *L) {
+
+    int Julgados = 0, Casosn = 0, Suspensos = 0, Dessobrestados = 0;
+
+    No *aux = L->inicio;
+
+    while (aux != NULL) {
+
+        Julgados += aux->dados.julgados_2026;
+        Casosn += aux->dados.casos_novos_2026;
+        Suspensos += aux->dados.suspensos_2026;
+        Dessobrestados += aux->dados.dessobrestados_2026;
+
+        aux = aux->prox;
+    }
+
+    int result = Casosn + Dessobrestados - Suspensos;
+
+    if (result <= 0) return 0.0;
+
+    return ((float)Julgados / result) * 100;
+}
+
+float calcularMeta2A(Lista *L){
+
+    int Julgm2 = 0, Distm2 = 0, Suspm2 = 0;
+
+    No* aux = L->inicio;
+
+    while(aux != NULL){
+
+        Julgm2 += aux->dados.julgm2_a;
+        Distm2 += aux->dados.distm2_a;
+        Suspm2 += aux->dados.suspm2_a;
+
+        aux = aux->prox;
+    }
+
+    int result = Distm2 - Suspm2;
+
+    if (result <= 0) return 0.0;
+
+    return ((float)Julgm2 / result) * (1000.0/7.0);
+}
